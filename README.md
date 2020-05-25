@@ -4,8 +4,8 @@ This is a rework of my old mod [Fashion Sense](https://github.com/FairBear/AYCAB
 ## Requirements
 * Koikatu (JP Version) _`Koikatsu Party Unknown if Compatible`_
 * [BepInEx](https://github.com/BepInEx/BepInEx/releases)
-* KKABMX
-* KK_OverlayMods
+* [KKABMX](https://github.com/ManlyMarco/ABMX/releases)
+* [KK_OverlayMods](https://github.com/ManlyMarco/Illusion-Overlay-Mods/releases)
 * [BepisPlugins](https://github.com/IllusionMods/BepisPlugins/releases)
 * [KKAPI](https://github.com/IllusionMods/IllusionModdingAPI/releases)
 
@@ -24,7 +24,7 @@ This is a rework of my old mod [Fashion Sense](https://github.com/FairBear/AYCAB
 
 ## What is this?
 
-A mod for the game `Koikatu` which allows your characters to choose a random outfit. They change their clothes at the start of the day (can be disabled), or when they enter the female bathrooms, the shower room, and the locker room.
+A mod for the game `Koikatu` which allows your characters to choose a random outfit. They change their clothes at the start of the day (can be disabled), or when they enter the female bathrooms, the shower room, or the locker room.
 
 <details>
   <summary>Preview</summary>
