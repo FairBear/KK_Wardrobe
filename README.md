@@ -12,9 +12,14 @@ This is a rework of my old mod [Fashion Sense](https://github.com/FairBear/AYCAB
 * Extract the `KK_Wardrobe.dll` in `Koikatu\BepInEx`.
 * Play.
 
+## Quick Start
+* Press `F10` to open the `Wardrobe Manager`.
+* Do stuff.
+* Don't forget to save.
+
 ## What is this?
 
-A mod for the game `Koikatu` which allows your characters to choose a random outfit.
+A mod for the game `Koikatu` which allows your characters to choose a random outfit. They change their clothes at the start of the day (can be disabled), or when they enter the female bathrooms, the shower room, and the locker room.
 
 <details>
   <summary>Preview</summary>
@@ -47,4 +52,13 @@ Want a personal wardrobe for a single character? You can whitelist them!
   <summary>Preview</summary>
   
 ![](https://raw.githubusercontent.com/FairBear/KK_Wardrobe/master/Preview/Preview3.png)
+</details>
+
+
+You can also change the player's clothes too!
+
+<details>
+  <summary>Preview</summary>
+  
+![](https://raw.githubusercontent.com/FairBear/KK_Wardrobe/master/Preview/Preview4.png)
 </details>
