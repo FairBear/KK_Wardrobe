@@ -9,11 +9,12 @@ This is a rework of my old mod [Fashion Sense](https://github.com/FairBear/AYCAB
 * [KKAPI](https://github.com/IllusionMods/IllusionModdingAPI/releases)
 
 ## Installation
-* Extract the `KK_Wardrobe.dll` in `Koikatu\BepInEx`.
+* Download the `KK_Wardrobe.zip` file in the [latest release](https://github.com/FairBear/KK_Wardrobe/releases/latest).
+* Extract the `KK_Wardrobe.dll` file in `Koikatu\BepInEx`.
 * Play.
 
 ## Quick Start
-* Download the `Example.zip` in the [latest release](https://github.com/FairBear/KK_Wardrobe/releases/latest).
+* Download the `Example.zip` file in the [latest release](https://github.com/FairBear/KK_Wardrobe/releases/latest).
 * Extract the `kk_wardrobe` folder in `Koikatu\UserData`.
 * Start the game.
 * Press `F10` to open the `Wardrobe Manager`.
