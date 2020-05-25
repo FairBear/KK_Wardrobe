@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B350B39F-7A5C-4697-B5C0-4B58304C8569}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KK_Wardrobe</RootNamespace>
+    <AssemblyName>KK_Wardrobe</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>F:\illusion\Koikatu\Koikatu_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>F:\illusion\Koikatu\Koikatu_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>F:\illusion\Koikatu\BepInEx\core\BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.Harmony">
+      <HintPath>F:\illusion\Koikatu\BepInEx\core\BepInEx.Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="ExtensibleSaveFormat">
+      <HintPath>F:\illusion\Koikatu\BepInEx\plugins\KK_BepisPlugins\ExtensibleSaveFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="KKABMX">
+      <HintPath>F:\illusion\Koikatu\BepInEx\plugins\KKABMX.dll</HintPath>
+    </Reference>
+    <Reference Include="KKAPI">
+      <HintPath>F:\illusion\Koikatu\BepInEx\plugins\KKAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="KK_OverlayMods">
+      <HintPath>F:\illusion\Koikatu\BepInEx\plugins\KK_OverlayMods.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>F:\illusion\Koikatu\Koikatu_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CheckList\CheckList.Array.cs" />
+    <Compile Include="CheckList\CheckList.Dictionary.cs" />
+    <Compile Include="CheckList\CheckList.Generic.cs" />
+    <Compile Include="Constants\CardType.cs" />
+    <Compile Include="CheckList\CheckList.cs" />
+    <Compile Include="Constants\Place.cs" />
+    <Compile Include="Constants\Strings\Strings.Main.cs" />
+    <Compile Include="Controller\Controller.cs" />
+    <Compile Include="Controller\Controller.Girls.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Extensions\Extensions.KKABMX.cs" />
+    <Compile Include="Extensions\Extensions.KK_OverlayMods.cs" />
+    <Compile Include="Girl.cs" />
+    <Compile Include="Helper\KCOXHelper.cs" />
+    <Compile Include="Helper\KKABMXHelper.cs" />
+    <Compile Include="Helper\KSOXHelper.cs" />
+    <Compile Include="KK_Wardrobe.cs" />
+    <Compile Include="Window\DialogWindow.cs" />
+    <Compile Include="Window\ManagerWindow\ManagerWindow.Address.cs" />
+    <Compile Include="Window\ManagerWindow\ManagerWindow.Config.cs" />
+    <Compile Include="Window\ManagerWindow\ManagerWindow.Config.Layer.cs" />
+    <Compile Include="Window\ManagerWindow\ManagerWindow.Config.Wardrobe.cs" />
+    <Compile Include="Window\ManagerWindow\ManagerWindow.Home.cs" />
+    <Compile Include="Window\ManagerWindow\ManagerWindow.Layer.cs" />
+    <Compile Include="Window\ManagerWindow\ManagerWindow.Menu.cs" />
+    <Compile Include="Window\ManagerWindow\ManagerWindow.Wardrobe.cs" />
+    <Compile Include="Window\SerializationWindow.cs" />
+    <Compile Include="Wardrobe\Folder.cs" />
+    <Compile Include="Wardrobe\Card.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Window\ManagerWindow\ManagerWindow.cs" />
+    <Compile Include="Constants\Strings\Strings.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="Wardrobe\Layer.cs" />
+    <Compile Include="Wardrobe\Wardrobe.cs" />
+    <Compile Include="Window\BaseWindow.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
