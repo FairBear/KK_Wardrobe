@@ -2,7 +2,7 @@
 This is a rework of my old mod [Fashion Sense](https://github.com/FairBear/AYCABTM), which has almost the same functionality.
 
 ## Requirements
-* Koikatu (JP Version) _`Koikatsu Party Unknown if Compatible`_
+* Koikatu (JP Version) or Koikatsu Party (EN Version)
 * [BepInEx](https://github.com/BepInEx/BepInEx/releases)
 * [KKABMX](https://github.com/ManlyMarco/ABMX/releases)
 * [KK_OverlayMods](https://github.com/ManlyMarco/Illusion-Overlay-Mods/releases)
