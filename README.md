@@ -22,6 +22,9 @@ This is a rework of my old mod [Fashion Sense](https://github.com/FairBear/AYCAB
 * Do stuff.
 * Don't forget to save.
 
+## Controls
+`F10` = Opens/closes the `Wardrobe Manager` window.
+
 ## What is this?
 
 A mod for the game `Koikatu` which allows your characters to choose a random outfit. They change their clothes at the start of the day (can be disabled), or when they enter the female bathrooms, the shower room, or the locker room.
