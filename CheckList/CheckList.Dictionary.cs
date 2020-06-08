@@ -22,8 +22,9 @@ namespace KK_Wardrobe
 			this.key = key;
 			this.dictionaryKey = dictionaryKey;
 			this.type = type;
+			linkedKey = GetLinkedKey(link);
 
-			Load(obj, data, link);
+			Load(obj, data);
 		}
 	}
 }

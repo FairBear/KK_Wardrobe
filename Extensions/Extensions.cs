@@ -28,7 +28,6 @@ namespace KK_Wardrobe
 				goto EMPTY;
 
 			int num = Controller.random.Next(maxWeight);
-			int min = 0;
 
 			foreach (T obj in list)
 			{
@@ -37,15 +36,13 @@ namespace KK_Wardrobe
 				if (weight == 0)
 					continue;
 
-				int max = min + weight;
-
-				if (num >= min && num <= max)
+				if (num < weight)
 				{
 					value = obj;
 					return true;
 				}
 
-				min = max;
+				num -= weight;
 			}
 
 		EMPTY:

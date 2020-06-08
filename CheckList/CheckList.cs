@@ -54,34 +54,17 @@ namespace KK_Wardrobe
 
 		public Type type;
 		public string key;
+		public string linkedKey;
 		public bool _value = true; // Value specifically set for this node.
 		public bool _subValue = true; // Value with respect to the parent node.
 		public CheckList parent = null;
 
 		public virtual string Key => key;
 
-		public string LabelKey
-		{
-			get
-			{
-				string key = Key;
-
-				if (key == null)
-					return null;
-
-				string _parent = parent?.key ?? string.Empty;
-
-				if (Strings.checkList_Strings.ContainsKey(_parent))
-				{
-					Dictionary<string, string> dict = Strings.checkList_Strings[_parent];
-
-					if (dict.ContainsKey(key))
-						key = dict[key];
-				}
-
-				return key;
-			}
-		}
+		public string LabelKey =>
+			Strings.checkList_Strings.ContainsKey(linkedKey) ?
+				Strings.checkList_Strings[linkedKey] :
+				Key;
 
 		public bool Value
 		{
@@ -108,13 +91,16 @@ namespace KK_Wardrobe
 			}
 		}
 
+		public string GetLinkedKey(string link) =>
+			link.IsNullOrEmpty() ? Key : $"{link}.{Key}";
+
 		public delegate void Apply_Info(object info,
 										object to,
 										object _from,
 										object _to,
 										int rank,
 										int index);
-		
+
 		public new void Add(CheckList item)
 		{
 			base.Add(item);
@@ -123,34 +109,25 @@ namespace KK_Wardrobe
 			item.SubValue = item.Value;
 		}
 
-		public void Load(object obj, Dictionary<string, bool> data, string link)
+		public void Load(object obj, Dictionary<string, bool> data)
 		{
-			string key = Key;
+			if (data != null && linkedKey != null && data.ContainsKey(linkedKey))
+				Value = data[linkedKey];
 
-			if (data != null && !key.IsNullOrEmpty())
-			{
-				if (link.IsNullOrEmpty())
-					link = key;
-				else
-					link += "." + key;
-
-				if (data.ContainsKey(link))
-					Value = data[link];
-			}
 
 			if (obj == null || _applicable.Contains(type))
 				return;
 
-			if (Load_Dictionary(obj, data, link))
+			if (Load_Dictionary(obj, data))
 				return;
 
-			if (Load_Array(obj, data, link))
+			if (Load_Array(obj, data))
 				return;
 
-			Load_Generic(obj, data, link);
+			Load_Generic(obj, data);
 		}
 
-		public bool Load_Dictionary(object obj, Dictionary<string, bool> data, string link)
+		public bool Load_Dictionary(object obj, Dictionary<string, bool> data)
 		{
 			if (!type.IsGenericType ||
 				!type.GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>)) ||
@@ -165,68 +142,63 @@ namespace KK_Wardrobe
 				string dictionaryKey = _type.GetProperty("Key").GetValue(pair, null) as string;
 				object _value = _type.GetProperty("Value").GetValue(pair, null);
 
-				string key;
-
-				if (this is CheckList_Dictionary _dictionary)
-					key = _dictionary.dictionaryKey;
-				else
-					key = this.key;
-
 				Add(new CheckList_Dictionary(
 					_value,
 					type.GetGenericArguments()[1],
 					key,
 					dictionaryKey,
 					data,
-					link
+					linkedKey
 				));
 			}
 
 			return true;
 		}
 
-		public bool Load_Array(object obj, Dictionary<string, bool> data, string link)
+		public bool Load_Array(object obj, Dictionary<string, bool> data)
 		{
 			if (!type.IsArray)
 				return false;
 
 			Type _type = type.GetElementType();
 			Array array = obj as Array;
+			int[] indices = new int[array.Rank];
+			int length = array.GetLength(0);
 
-			if (array.Rank > 1)
+			while (indices[0] < length)
 			{
-				for (int y = 0; y < array.Rank; y++)
-					for (int x = 0; x < array.GetLength(y); x++)
-					{
-						object _value = array.GetValue(y, x);
+				Add(new CheckList_Array(
+					array.GetValue(indices),
+					_type,
+					key,
+					indices,
+					data,
+					linkedKey
+				));
 
-						if (_value != null)
-							Add(new CheckList_Array(_value, _type, key, y, x, data, link));
-					}
+				for (int i = array.Rank - 1; i >= 0; i--)
+				{
+					indices[i]++;
 
-				return true;
-			}
+					if (indices[i] < array.GetLength(i))
+						break;
 
-			for (int i = 0; i < array.Length; i++)
-			{
-				object _value = array.GetValue(i);
-
-				if (_value != null)
-					Add(new CheckList_Array(_value, _type, key, 0, i, data, link));
+					if (i > 0)
+						indices[i] = 0;
+				}
 			}
 
 			return true;
 		}
 
-		public void Load_Generic(object obj, Dictionary<string, bool> data, string link)
+		public void Load_Generic(object obj, Dictionary<string, bool> data)
 		{
 			foreach (FieldInfo field in type.GetFields())
 				Load_Generic(
 					field.FieldType,
 					field.GetValue(obj),
 					field.Name,
-					data,
-					link
+					data
 				);
 
 			foreach (PropertyInfo property in type.GetProperties())
@@ -235,21 +207,25 @@ namespace KK_Wardrobe
 						property.PropertyType,
 						property.GetValue(obj, null),
 						property.Name,
-						data,
-						link
+						data
 					);
 		}
 
 		public void Load_Generic(Type type,
 								 object value,
 								 string name,
-								 Dictionary<string, bool> data,
-								 string link)
+								 Dictionary<string, bool> data)
 		{
 			if (value == null || _indices_Ignore.Contains(name))
 				return;
 
-			Add(new CheckList_Generic(value, type, name, data, link));
+			Add(new CheckList_Generic(
+				value,
+				type,
+				name,
+				data,
+				linkedKey
+			));
 		}
 
 		public byte[] ToBytes()
@@ -261,15 +237,12 @@ namespace KK_Wardrobe
 			return LZ4MessagePackSerializer.Serialize(data);
 		}
 
-		public void ToBytes_Internal(ref Dictionary<string, bool> data, string link = "")
+		public void ToBytes_Internal(ref Dictionary<string, bool> data)
 		{
 			foreach (CheckList node in this)
 			{
-				string name = node.Key;
-
-				string _link = link + (link.Length > 0 ? "." : "") + name;
-				data[_link] = node._value;
-				node.ToBytes_Internal(ref data, _link);
+				data[node.linkedKey] = node._value;
+				node.ToBytes_Internal(ref data);
 			}
 		}
 
@@ -319,34 +292,16 @@ namespace KK_Wardrobe
 			Array aFrom = from as Array;
 			Array aTo = to as Array;
 
-			bool ranked = aFrom.Rank > 1;
 			object _from;
 
-			if (ranked)
-				_from = aFrom.GetValue(array.rank, array.index);
-			else
-				_from = aFrom.GetValue(array.index);
+			_from = aFrom.GetValue(array.indices);
 
 			bool flag = _applicable.Contains(from.GetType().GetElementType());
 
 			if (flag || _from == null)
-			{
-				if (ranked)
-					aTo.SetValue(_from, array.rank, array.index);
-				else
-					aTo.SetValue(_from, array.index);
-			}
+				aTo.SetValue(_from, array.indices);
 			else
-			{
-				object _to;
-
-				if (ranked)
-					_to = aTo.GetValue(array.rank, array.index);
-				else
-					_to = aTo.GetValue(array.index);
-
-				array.Apply(_from, _to);
-			}
+				array.Apply(_from, aTo.GetValue(array.indices));
 		}
 
 		public void Apply_Generic(CheckList node, object from, object to)

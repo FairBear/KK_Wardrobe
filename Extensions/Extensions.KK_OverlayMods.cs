@@ -13,10 +13,14 @@ namespace KK_Wardrobe
 		public static PluginData NewKSOXData => new PluginData { version = 1 };
 		public static PluginData NewKCOXData => new PluginData { version = 1 };
 
-		public static PluginData KSOXData(this ChaFileControl ChaFile)
-		{
-			return ExtendedSave.GetExtendedDataById(ChaFile, KoiSkinOverlayMgr.GUID) ?? NewKSOXData;
-		}
+		public static PluginData KSOXData(this ChaFileControl chara) =>
+			ExtendedSave.GetExtendedDataById(chara, KoiSkinOverlayMgr.GUID) ?? NewKSOXData;
+
+		public static PluginData KCOXData(this ChaFileControl chara) =>
+			ExtendedSave.GetExtendedDataById(chara, KoiClothesOverlayMgr.GUID) ?? NewKCOXData;
+
+		public static PluginData KCOXData(this ChaFileCoordinate coord) =>
+			ExtendedSave.GetExtendedDataById(coord, KoiClothesOverlayMgr.GUID) ?? NewKCOXData;
 
 		public static PluginData KSOXData(this Dictionary<TexType, OverlayTexture> overlays)
 		{
@@ -27,11 +31,6 @@ namespace KK_Wardrobe
 					data.data[pair.Key.ToString()] = pair.Value.Data;
 
 			return data;
-		}
-
-		public static PluginData KCOXData(this ChaFileControl ChaFile)
-		{
-			return ExtendedSave.GetExtendedDataById(ChaFile, KoiClothesOverlayMgr.GUID) ?? NewKCOXData;
 		}
 
 		public static PluginData KCOXData(this Dictionary<ChaFileDefine.CoordinateType, Dictionary<string, ClothesTexData>> overlays)
@@ -51,8 +50,6 @@ namespace KK_Wardrobe
 			{
 				if (type == TexType.Unknown)
 					continue;
-
-				string key = type.ToString();
 
 				if (data.data.TryGetValue(type.ToString(), out object texData) &&
 					texData is byte[] bytes &&
@@ -74,6 +71,18 @@ namespace KK_Wardrobe
 			catch { }
 
 			return new Dictionary<ChaFileDefine.CoordinateType, Dictionary<string, ClothesTexData>>();
+		}
+
+		public static Dictionary<string, ClothesTexData> KCOXCoordinateDictionary(this PluginData data)
+		{
+			try
+			{
+				if (data.data.TryGetValue(KCOX_KEY, out object value) && value is byte[] bytes)
+					return MessagePackSerializer.Deserialize<Dictionary<string, ClothesTexData>>(bytes);
+			}
+			catch { }
+
+			return new Dictionary<string, ClothesTexData>();
 		}
 	}
 }

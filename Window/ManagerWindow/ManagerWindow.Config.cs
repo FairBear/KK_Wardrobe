@@ -10,9 +10,6 @@ namespace KK_Wardrobe
 
 		public Folder config_Folder = null;
 		public Stack<CheckList> config_Address = new Stack<CheckList>();
-		public bool config_Busy = false;
-		public CheckList config_Clipboard = null;
-		public Folder config_Clipboard_Folder = null;
 
 		public Vector2 config_Scroll = Vector2.zero;
 

@@ -1,5 +1,4 @@
 using ActionGame.Chara;
-using ExtensibleSaveFormat;
 using KKABMX.Core;
 using KoiClothesOverlayX;
 using KoiSkinOverlayX;
@@ -24,7 +23,7 @@ namespace KK_Wardrobe
 
 		// Logic
 		public bool _initialized = false;
-		public bool _reloadPending = false;
+		public int _reloadPending = 0;
 		public int? _lastRedressLocation = null;
 
 		public Base CharaBase => _charaBase?.Invoke();
@@ -51,6 +50,7 @@ namespace KK_Wardrobe
 
 			ChaControl chaCtrl = ChaCtrl;
 
+			// Wait for the character to finish reloading.
 			if (!chaCtrl.loadEnd)
 				return true;
 
@@ -62,52 +62,24 @@ namespace KK_Wardrobe
 					_lastRedressLocation = null;
 
 			// Only update the model when the girl is in the same location.
-			if (_reloadPending && charaBase.mapNo == Controller.player.charaBase.mapNo)
-			{
-				_reloadPending = false;
+			if (_reloadPending > 0 &&
+				charaBase.isActive &&
+				charaBase.mapNo == Controller.player.charaBase.mapNo)
 				Reload();
-			}
 
 			return true;
 		}
 
-		public PluginData GetBones()
-		{
-			try
-			{
-				return ChaCtrl.GetComponent<BoneController>().Modifiers.KKABMXData();
-			} catch { }
-
-			return null;
-		}
-
-		public PluginData GetSkinOverlay()
-		{
-			try
-			{
-				PluginData data = Extensions.NewKSOXData;
-				IEnumerable<KeyValuePair<TexType, OverlayTexture>> overlays =
-					ChaCtrl.GetComponent<KoiSkinOverlayController>().Overlays;
-
-				foreach (KeyValuePair<TexType, OverlayTexture> overlay in overlays)
-					if (overlay.Value != null)
-						data.data.Add(overlay.Key.ToString(), overlay.Value.Data);
-
-				return data;
-			} catch { }
-
-			return null;
-		}
-
-		public PluginData GetClothesOverlay()
-		{
-			return ChaCtrl.chaFile.KCOXData();
-		}
-
 		public void Reload()
 		{
-			CharaBase.ChangeNowCoordinate(); // Reload clothes.
-			ChaCtrl.Reload(); // Reload body.
+			_reloadPending--;
+
+			if (_reloadPending == 5)
+				ChaCtrl.Reload(); // Reload body.
+
+			// Add a slight delay to reloading the clothes for KCOX.
+			if (_reloadPending == 0)
+				CharaBase.ChangeNowCoordinate(); // Reload clothes.
 		}
 
 		public void ChangeOutfit(bool reset = false)
@@ -137,9 +109,9 @@ namespace KK_Wardrobe
 			chaFileCtrl.CopyCoordinate(charFile.coordinate);
 			chaFileCtrl.CopyCustom(charFile.custom);
 
-			KKABMXHelper kkabmxHelper = new KKABMXHelper(chaFileCtrl);
-			KCOXHelper kcoxHelper = new KCOXHelper(chaFileCtrl);
-			KSOXHelper ksoxHelper = new KSOXHelper(chaFileCtrl);
+			KKABMXHelper kkabmxHelper = new KKABMXHelper(charFile);
+			KCOXHelper kcoxHelper = new KCOXHelper(charFile);
+			KSOXHelper ksoxHelper = new KSOXHelper(charFile);
 
 			// Failing to roll will use original outfit instead.
 			if (!reset && Controller.RollForOutfit(out List<Layer> layers, out List<Card> cards, fullname))
@@ -157,7 +129,7 @@ namespace KK_Wardrobe
 			ChangeOutfit_Internal_KCOX(kcoxHelper);
 			ChangeOutfit_Internal_KSOX(ksoxHelper);
 
-			_reloadPending = true;
+			_reloadPending = 10;
 		}
 
 		public void ChangeOutfit_Internal_KKABMX(KKABMXHelper helper)

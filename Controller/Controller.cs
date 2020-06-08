@@ -15,7 +15,7 @@ namespace KK_Wardrobe
 		public static SerializationWindow serializationWindow = new SerializationWindow();
 		public static DialogWindow dialogWindow = new DialogWindow();
 
-		public static Random random = new Random();
+		public static Random random = new Random(dummyChaFileCtrl.GetHashCode());
 		public static HashSet<Wardrobe> wardrobes = new HashSet<Wardrobe>();
 		public static HashSet<int> locations = new HashSet<int>();
 
@@ -78,6 +78,13 @@ namespace KK_Wardrobe
 
 		public static void ReloadWardrobes()
 		{
+			string path = Path.GetFullPath(Strings.DATA_PATH);
+
+			wardrobes.Clear();
+
+			if (!Directory.Exists(path))
+				return;
+
 			_busy = true;
 			serializationWindow.Initialize();
 			serializationWindow.visible = managerWindow.visible;
@@ -90,7 +97,6 @@ namespace KK_Wardrobe
 		public static void ReloadWardrobes_Internal()
 		{
 			string path = Path.GetFullPath(Strings.DATA_PATH);
-			wardrobes.Clear();
 
 			foreach (string _path in Directory.GetDirectories(path))
 				wardrobes.Add(new Wardrobe(_path));
@@ -150,6 +156,9 @@ namespace KK_Wardrobe
 		public static bool HasUnusedAssets()
 		{
 			string path0 = Path.GetFullPath(Strings.DATA_PATH) + "\\";
+
+			if (!Directory.Exists(path0))
+				return false;
 
 			foreach (string path1 in Directory.GetDirectories(path0))
 			{

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KoiClothesOverlayX;
+using Sirenix.OdinInspector.Demos;
+using System;
 using System.Linq;
 
 namespace KK_Wardrobe
@@ -129,41 +131,18 @@ namespace KK_Wardrobe
 				"Casual",
 				"Sleepwear"
 			};
-
-			WriteString
-				("custom", "Body")
-				("coordinate", "Clothes")
-				("shapeValueBody", "Body Shape")
-				("parts", "Clothing Parts", "clothes")
-				("subPartsId", "Uniform Parts", "clothes")
-				("KCOX", "KCOX{School01}", coordinate[0])
-				("KCOX", "KCOX{School02}", coordinate[1])
-				("KCOX", "KCOX{Gym}", coordinate[2])
-				("KCOX", "KCOX{Swim}", coordinate[3])
-				("KCOX", "KCOX{Club}", coordinate[4])
-				("KCOX", "KCOX{Plain}", coordinate[5])
-				("KCOX", "KCOX{Pajamas}", coordinate[6]);
-
-			WriteString("coordinate", "coordinate", 0, coordinate);
-			WriteString("KKABMXCoordinate", "KKABMXCoordinate", 0, coordinate);
-
-			ChaFileDefine.BodyShapeIdx[] bodyShapeIdx =
-				Enum.GetValues(typeof(ChaFileDefine.BodyShapeIdx)) as ChaFileDefine.BodyShapeIdx[];
-
-			WriteString(
-				"shapeValueBody", "shapeValueBody", 0,
-				bodyShapeIdx.Select(v => v.ToString()).ToArray()
-			);
-
-
-			WriteString(
-				"pupil", "pupil", 0,
-				"Left Pupil",
-				"Right Pupil"
-			);
-
-			WriteString(
-				"parts", "parts", 0,
+			string[] coordinateKCOX = new string[]
+			{
+				"School01",
+				"School02",
+				"Gym",
+				"Swim",
+				"Club",
+				"Plain",
+				"Pajamas"
+			};
+			string[] clothesParts = new string[]
+			{
 				"Top",
 				"Bottom",
 				"Bra",
@@ -173,14 +152,86 @@ namespace KK_Wardrobe
 				"Legwear",
 				"Indoor Footwear",
 				"Outdoor Footwear"
-			);
+			};
+			string[] clothesSubParts = new string[]
+			{
+				"Uniform Shirt",
+				"Uniform Jacket",
+				"Uniform Decoration"
+			};
+
+			WriteString
+				("custom", "Body")
+				("coordinate", "Clothes")
+				("custom.face.shapeValueFace", "Face Shape")
+				("custom.body.shapeValueBody", "Body Shape")
+				("custom.face.pupil", "Pupils");
+
+			WriteString("coordinate", coordinate);
+			WriteString("KKABMXCoordinate", coordinate);
+
+			ChaFileDefine.FaceShapeIdx[] faceShapeIdx =
+				Enum.GetValues(typeof(ChaFileDefine.FaceShapeIdx)) as ChaFileDefine.FaceShapeIdx[];
 
 			WriteString(
-				"subPartsId", "subPartsId", 0,
-				"Shirt",
-				"Jacket",
-				"Decoration"
+				"custom.face.shapeValueFace",
+				faceShapeIdx.Select(v => v.ToString()).ToArray()
 			);
+
+			ChaFileDefine.BodyShapeIdx[] bodyShapeIdx =
+				Enum.GetValues(typeof(ChaFileDefine.BodyShapeIdx)) as ChaFileDefine.BodyShapeIdx[];
+
+			WriteString(
+				"custom.body.shapeValueBody",
+				bodyShapeIdx.Select(v => v.ToString()).ToArray()
+			);
+
+			ChaFileDefine.HairKind[] hairKind =
+				Enum.GetValues(typeof(ChaFileDefine.HairKind)) as ChaFileDefine.HairKind[];
+
+			WriteString(
+				"custom.hair.parts",
+				hairKind.Select(v => v.ToString()).ToArray()
+			);
+
+
+			WriteString(
+				"custom.face.pupil",
+				"Left Pupil",
+				"Right Pupil"
+			);
+
+
+			// Coordinates
+
+			for (int i = 0; i < 7; i++)
+			{
+				WriteString($"coordinate.coordinate[{i}].clothes.parts", "Clothing Parts");
+				WriteString($"coordinate.coordinate[{i}].clothes.subPartsId", "Uniform Parts");
+				WriteString($"coordinate.coordinate[{i}].clothes.parts", clothesParts);
+				WriteString($"coordinate.coordinate[{i}].clothes.subPartsId", clothesSubParts);
+				WriteString($"KCOX.KCOX{{{coordinateKCOX[i]}}}", coordinate[i]);
+
+				for (int n = 0; n < KoiClothesOverlayMgr.MainClothesNames.Length; n++)
+				{
+					string key = KoiClothesOverlayMgr.MainClothesNames[n];
+
+					WriteString(
+						$"KCOX.KCOX{{{coordinateKCOX[i]}}}.KCOX{{{key}}}",
+						clothesParts[n]
+					);
+				}
+
+				for (int n = 0; n < KoiClothesOverlayMgr.SubClothesNames.Length; n++)
+				{
+					string key = KoiClothesOverlayMgr.SubClothesNames[n];
+
+					WriteString(
+						$"KCOX.KCOX{{{coordinateKCOX[i]}}}.KCOX{{{key}}}",
+						clothesSubParts[n]
+					);
+				}
+			}
 		}
 	}
 }

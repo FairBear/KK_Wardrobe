@@ -6,6 +6,10 @@ namespace KK_Wardrobe
 {
 	public partial class ManagerWindow
 	{
+		public bool config_Busy = false;
+		public CheckList config_Clipboard = null;
+		public Folder config_Clipboard_Folder = null;
+
 		public void Draw_Config_Layer(Layer layer)
 		{
 			GUILayout.BeginVertical(GUI.skin.box);

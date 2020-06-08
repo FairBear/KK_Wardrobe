@@ -11,7 +11,7 @@ namespace KK_Wardrobe
 	{
 		public const string GUID = "com.fairbair.kk_wardrobe";
 		public const string PluginName = "KK_Wardrobe";
-		public const string Version = "1.0.0";
+		public const string Version = "1.0.1";
 
 
 		const string SECTION_GENERAL = "General";

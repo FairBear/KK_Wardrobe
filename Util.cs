@@ -1,6 +1,7 @@
 ﻿using ExtensibleSaveFormat;
 using KKABMX.Core;
 using KKAPI.Utilities;
+using KoiClothesOverlayX;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,7 +17,7 @@ namespace KK_Wardrobe
 				onAccept,
 				Strings.SELECT_CARDS,
 				Strings.CHARA_PATH,
-				Strings.CHARA_COORD_FILTER,
+				filter,
 				Strings.CARD_EXTENSION,
 				OpenFileDialog.OpenSaveFileDialgueFlags.OFN_ALLOWMULTISELECT |
 				OpenFileDialog.OpenSaveFileDialgueFlags.OFN_FILEMUSTEXIST |
@@ -32,25 +33,26 @@ namespace KK_Wardrobe
 
 			saveData = File.ReadAllBytes(path);
 
-			ChaFileControl chaFileCtrl = new ChaFileControl();
+			ChaFileControl chara = new ChaFileControl();
 
-			if (chaFileCtrl.LoadCharaFile(path))
+			if (chara.LoadCharaFile(path))
 			{
-				result = chaFileCtrl;
-				pngData = chaFileCtrl.pngData;
+				result = chara;
+				pngData = chara.pngData;
 				return CardType.Character;
 			}
 
-			ChaFileCoordinate chaFileCoord = new ChaFileCoordinate();
+			ChaFileCoordinate coord = new ChaFileCoordinate();
 
-			if (chaFileCoord.LoadFile(path))
+			if (coord.LoadFile(path))
 			{
-				KKABMXCoordToChara(chaFileCoord, chaFileCtrl);
+				KKABMXCoordToChara(coord, chara);
+				KCOXCoordToChara(coord, chara);
 
-				for (int i = 0; i < chaFileCtrl.coordinate.Length; i++)
-					chaFileCtrl.coordinate[i] = chaFileCoord;
+				for (int i = 0; i < chara.coordinate.Length; i++)
+					chara.coordinate[i] = coord;
 
-				result = chaFileCtrl;
+				result = chara;
 				pngData = PngFile.LoadPngBytes(path);
 				return CardType.Coordinate;
 			}
@@ -81,6 +83,20 @@ namespace KK_Wardrobe
 			}
 
 			ExtendedSave.SetExtendedDataById(chara, KKABMX_Core.ExtDataGUID, charaData.KKABMXData());
+		}
+
+		public static void KCOXCoordToChara(ChaFileCoordinate coord, ChaFileControl chara)
+		{
+			Dictionary<string, ClothesTexData> coordData = coord.KCOXData().KCOXCoordinateDictionary();
+			Dictionary<ChaFileDefine.CoordinateType, Dictionary<string, ClothesTexData>> charaData =
+				chara.KCOXData().KCOXDictionary();
+			ChaFileDefine.CoordinateType[] coordinates =
+				Enum.GetValues(typeof(ChaFileDefine.CoordinateType)) as ChaFileDefine.CoordinateType[];
+
+			foreach (ChaFileDefine.CoordinateType coordinate in coordinates)
+				charaData[coordinate] = coordData;
+
+			ExtendedSave.SetExtendedDataById(chara, KoiClothesOverlayMgr.GUID, charaData.KCOXData());
 		}
 	}
 }
