@@ -1,6 +1,9 @@
 # KK_Wardrobe
 This is a rework of my old mod [Fashion Sense](https://github.com/FairBear/AYCABTM), which has almost the same functionality.
 
+## No Longer in Development
+Development regarding this mod is permanently put to a halt. I sincerly apologize for any bugs currently present as I do not have the time and resources to fix and maintain the mod. You may take and/or modify the source code at your own discretion.
+
 ## Requirements
 * Koikatu (JP Version) or Koikatsu Party (EN Version)
 * [BepInEx](https://github.com/BepInEx/BepInEx/releases)
